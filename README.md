@@ -1,84 +1,85 @@
-# APKBully 🛡️
+# APKBully
 
-**APKBully** is a fast, automated Android APK decompiler and secret leak scanner. It decompiles APKs using **JADX** and scans the extracted code and resources for credentials, API tokens, and secrets using **BetterLeaks**.
+**APKBully** is a fast, automated Android APK decompiler and secret scanning tool. It decompiles APKs using **JADX** and scans the extracted source code and resources for exposed credentials, API tokens, and other secrets using **BetterLeaks**.
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/ded0bf66-d7ca-45bb-899f-17fdd1cad995" alt="APKBully scanning interface" width="800">
+</p>
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/8c741094-f78e-448c-a615-ceb9bcef885f" alt="APKBully scan results" width="800">
+</p>
 
 ---
 
-## ✨ Features
+## Features
 
-- **Automated Tool Setup (`setup`)**:
-  - Automatically verifies and sets up the Java Runtime Environment (JRE). If root/sudo is not available, APKBully seamlessly downloads and configures a standalone portable OpenJDK 17 runtime in user-space.
-  - Downloads and verifies **BetterLeaks** (`v2.0.0-rc.7`).
-  - Downloads and configures **JADX** (`v1.5.6`).
-- **Full APK Scan (`scan`)**:
+- **Automated Tool Setup (`setup`)**
+  - Automatically detects and configures the Java Runtime Environment (JRE).
+  - If root or sudo access is unavailable, APKBully downloads and configures a standalone portable OpenJDK 17 runtime in user space.
+  - Downloads and verifies BetterLeaks (`v2.0.0-rc.7`).
+  - Downloads and configures JADX (`v1.5.6`).
+
+- **Full APK Scan (`scan`)**
   - Validates the target APK file.
-  - Decompiles both code and XML resources using JADX.
-  - Scans decompiled sources for exposed keys and secrets.
-- **Direct Directory Scan (`direct-scan`)**:
-  - Directly scans existing decompiled source trees, skipping decompilation.
-- **Live Terminal Animations**:
-  - Displays dynamic spinners and download progress bars powered by Python `while` loops.
-- **Structured Findings & JSON Output**:
-  - Displays formatted console findings including rule names, descriptions, file locations, line numbers, and redacted secrets.
-  - Validates `-o / --output` to ensure `.json` extension (automatically falls back to timestamped `output_<hhmmss>.json` if invalid or omitted).
+  - Decompiles application code and XML resources using JADX.
+  - Scans extracted sources and resources for exposed credentials, API keys, and secrets.
+
+- **Direct Directory Scan (`direct-scan`)**
+  - Scans existing decompiled source directories without requiring another decompilation step.
+    
+- **Structured Findings and JSON Output**
+  - Displays findings with rule names, descriptions, file locations, line numbers, and redacted secrets.
+  - Supports JSON report generation through `-o / --output`.
+  - Validates the output file extension and automatically generates a timestamped filename (`output_<hhmmss>.json`) when the output path is omitted or invalid.
 
 ---
 
-## 🚀 Installation & Setup
+## Installation and Setup
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/TushN101/APKBully.git
-   cd APKBully
-   ```
+### 1. Clone the Repository
 
-2. **Run Environment Setup**:
-   ```bash
-   python3 apkbully.py setup
-   ```
-   *This initializes `~/.apkbully/` and downloads all required binaries (JRE, BetterLeaks, JADX).*
+```bash
+git clone https://github.com/TushN101/APKBully.git
+cd APKBully
+```
+
+### 2. Initialize the Environment
+
+```bash
+python3 apkbully.py setup
+```
+
+This initializes `~/.apkbully/` and downloads the required dependencies and binaries, including the JRE, BetterLeaks, and JADX.
 
 ---
 
-## 📖 Usage
+## Usage
 
 ### 1. Full APK Scan
-Decompiles the specified APK and scans the extracted codebase for secret leaks:
+
+Decompiles the specified APK and scans the extracted codebase for exposed secrets.
+
 ```bash
-# Default timestamped JSON report (e.g., output_182254.json)
+# Generate a timestamped JSON report
 python3 apkbully.py scan -i path/to/app.apk
 
-# Custom JSON output report
+# Specify a custom JSON output file
 python3 apkbully.py scan -i path/to/app.apk -o findings.json
 ```
 
 ### 2. Direct Scan on Decompiled Code
-Directly scans an already decompiled folder:
+
+Scans an existing decompiled source directory without running JADX again.
+
 ```bash
 python3 apkbully.py direct-scan -i path/to/decompiled_src -o findings.json
 ```
 
 ### 3. Force Re-setup
-To force re-downloading and re-extracting dependencies:
+
+Force APKBully to re-download and reconfigure its dependencies.
+
 ```bash
 python3 apkbully.py setup --force
-```
-
----
-
-## 📂 Project Architecture
-
-```
-APKBully/
-├── apkbully.py                  # Main CLI entrypoint
-├── requirements.txt             # Python dependencies
-├── utils/
-│   ├── config.py                # Paths, URLs, and binary finders
-│   ├── animation.py             # Python while-loop animations & progress
-│   ├── setup.py                 # Setup orchestration and state marker
-│   ├── betterleaks_setup.py     # BetterLeaks downloader and extractor
-│   ├── jadx_setup.py            # JADX downloader and extractor
-│   ├── jre_installer.py         # JRE manager (Apt + Portable OpenJDK fallback)
-│   ├── apk_decompiler.py        # JADX APK decompilation runner
-│   └── apk_scanner.py           # BetterLeaks scanner & result formatter
 ```
