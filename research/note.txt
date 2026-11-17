@@ -1,0 +1,9 @@
+
+
+The secrets file have been removed cause github doesnt let me push with these secrets
+
+You can find the secrets here : https://github.com/BonJarber/SecretsTest
+
+Note : I had cleaned and remove any python code and made it a list of secrets so that it works with scripts
+
+So ensure to do the same in your case
