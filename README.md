@@ -6,10 +6,6 @@
   <img src="https://github.com/user-attachments/assets/ded0bf66-d7ca-45bb-899f-17fdd1cad995" alt="APKBully scanning interface" width="800">
 </p>
 
-<p align="left">
-  <img src="https://github.com/user-attachments/assets/8c741094-f78e-448c-a615-ceb9bcef885f" alt="APKBully scan results" width="800">
-</p>
-
 ---
 
 ## Features
@@ -32,25 +28,6 @@
   - Displays findings with rule names, descriptions, file locations, line numbers, and redacted secrets.
   - Supports JSON report generation through `-o / --output`.
   - Validates the output file extension and automatically generates a timestamped filename (`output_<hhmmss>.json`) when the output path is omitted or invalid.
-
----
-
-## Installation and Setup
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/TushN101/APKBully.git
-cd APKBully
-```
-
-### 2. Initialize the Environment
-
-```bash
-python3 apkbully.py setup
-```
-
-This initializes `~/.apkbully/` and downloads the required dependencies and binaries, including the JRE, BetterLeaks, and JADX.
 
 ---
 
@@ -83,3 +60,27 @@ Force APKBully to re-download and reconfigure its dependencies.
 ```bash
 python3 apkbully.py setup --force
 ```
+
+---
+
+## Research
+
+Tested **Liquid AI `d1-omni:600m`**, hosted locally through Ollama's `/v1/systemone` API.
+
+Used two datasets: `realsecrets.txt` (66 positive-labelled samples) and `falsepositives.txt` (5 negative-labelled samples).
+
+### Results
+
+| Dataset | Samples | Threshold | Correct / Detected | False Positives |
+|---|---:|---:|---:|---:|
+| Real secrets | 66 | > 0.70 | 0 detected | - |
+| Real secrets | 66 | > 0.50 | 17 detected | - |
+| False secrets | 5 | > 0.70 | 4 correct | 1 |
+| False secrets | 5 | > 0.50 | 3 correct | 2 |
+
+### Conclusion
+
+The model demonstrated poor secret detection, missing 49/66 positive-labelled samples even at the lower 0.50 threshold. Lowering the threshold also increased false positives.
+
+**Decision:** Not integrated into APKBully due to insufficient detection accuracy and unreliable classification of credential formats.
+
